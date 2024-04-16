@@ -52,16 +52,40 @@
   />
 </form>
 
-
-<div class="d-flex justify-content-center mt-4">
+<div class="d-flex justify-content-center my-4">
   <input
-  type="number"
-  placeholder="Pesquisar Id"
-  name="cidade"
-  class="form-control w-75 mx-2"
-  [(ngModel)]="buscaId"
+    type="number"
+    placeholder="Pesquisar Id"
+    name="cidade"
+    class="form-control w-75 mx-2"
+    [(ngModel)]="buscaId"
   />
-    <input type="button" value="Buscar" class="btn btn-success w-auto mx-2" (click)="buscar(buscaId)">
+  <input
+    type="button"
+    value="Buscar"
+    class="btn btn-success w-auto mx-2"
+    (click)="buscar(buscaId)"
+  />
+</div>
+<div class="d-flex justify-content-center">
+  <select name="opcoesColuna" class="form-select w-auto" [(ngModel)]="colunaFiltro">
+    <option value="nome">Nome</option>
+    <option value="idade">Idade</option>
+    <option value="cidade">Cidade</option>
+    <option value="codigo">Id</option>
+  </select>
+  
+  <select name="opcoesOrdem" class="form-select w-auto mx-2" [(ngModel)]="ordenacaoFiltro">
+    <option value="asc">Crescente</option>
+    <option value="desc">Decrescente</option>
+  </select>
+
+  <input
+    type="button"
+    value="Filtrar"
+    class="btn btn-success w-auto"
+    (click)="filtrar(colunaFiltro, ordenacaoFiltro)"
+  />
 </div>
 
 <table class="table mt-4" *ngIf="formVisibilityHandler">
@@ -83,7 +107,11 @@
       <td>{{ c.nome }}</td>
       <td>{{ c.idade }}</td>
       <td>{{ c.cidade }}</td>
-      <td><button class="btn btn-success" (click)="selecionar(i)">Selecionar</button></td>
+      <td>
+        <button class="btn btn-secondary" (click)="selecionar(i)">
+          Selecionar
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>

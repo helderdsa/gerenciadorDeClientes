@@ -15,11 +15,10 @@ import { log } from 'console';
 })
 export class PrincipalComponent {
   cliente = new Cliente();
-
   clientes: Cliente[] = [];
-
-  buscaId: String = ''
-
+  buscaId: String = '';
+  colunaFiltro = '';
+  ordenacaoFiltro = '';
   formVisibilityHandler: boolean = true;
 
   constructor(private servico: ClienteService) {}
@@ -29,14 +28,19 @@ export class PrincipalComponent {
   }
 
   buscar(input: String): void {
-    
-    if (input !== "") {
+    if (input !== '') {
       this.servico.getCliente(input).subscribe((data) => {
         this.clientes = [data];
       });
     } else {
       this.listar();
     }
+  }
+
+  filtrar(coluna: String, direcao: String): void {
+    this.servico
+      .getFilter(coluna, direcao)
+      .subscribe((data) => (this.clientes = data));
   }
 
   cadastrar(): void {
@@ -47,11 +51,10 @@ export class PrincipalComponent {
     });
   }
 
-  selecionar(index:number):void {
+  selecionar(index: number): void {
     this.cliente = this.clientes[index];
     this.formVisibilityHandler = false;
     console.log(this.cliente);
-    
   }
 
   alterar(): void {
@@ -63,7 +66,7 @@ export class PrincipalComponent {
     });
   }
 
-  deletar(index:number): void {
+  deletar(index: number): void {
     this.servico.deleteCliente(this.cliente.codigo).subscribe(() => {
       this.listar();
       this.cliente = new Cliente();
