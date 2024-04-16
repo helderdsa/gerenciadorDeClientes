@@ -1,15 +1,15 @@
-import { JsonPipe, NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Cliente } from '../model/Cliente';
 import { ClienteService } from '../servico/cliente.service';
-import { log } from 'console';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-principal',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, HttpClientModule, JsonPipe],
+  imports: [NgIf, NgFor, FormsModule, HttpClientModule],
   templateUrl: './principal.component.html',
   styleUrl: './principal.component.css',
 })
@@ -19,9 +19,8 @@ export class PrincipalComponent {
   buscaId: String = '';
   colunaFiltro = '';
   ordenacaoFiltro = '';
-  formVisibilityHandler: boolean = true;
 
-  constructor(private servico: ClienteService) {}
+  constructor(private servico: ClienteService, private router: Router) {}
 
   listar(): void {
     this.servico.getClientes().subscribe((data) => (this.clientes = data));
@@ -43,41 +42,12 @@ export class PrincipalComponent {
       .subscribe((data) => (this.clientes = data));
   }
 
-  cadastrar(): void {
-    this.servico.postCliente(this.cliente).subscribe(() => {
-      this.listar();
-      this.cliente = new Cliente();
-      alert('Cliente cadastrado com sucesso!');
-    });
-  }
-
   selecionar(index: number): void {
     this.cliente = this.clientes[index];
-    this.formVisibilityHandler = false;
-    console.log(this.cliente);
   }
 
-  alterar(): void {
-    this.servico.putCliente(this.cliente).subscribe(() => {
-      this.listar();
-      this.cliente = new Cliente();
-      this.formVisibilityHandler = true;
-      alert('Cliente alterado com sucesso!');
-    });
-  }
-
-  deletar(index: number): void {
-    this.servico.deleteCliente(this.cliente.codigo).subscribe(() => {
-      this.listar();
-      this.cliente = new Cliente();
-      this.formVisibilityHandler = true;
-      alert('Cliente deletado com sucesso!');
-    });
-  }
-
-  cancelar(): void {
-    this.cliente = new Cliente();
-    this.formVisibilityHandler = true;
+  navegar(rota: String): void {
+    this.router.navigate([rota]);
   }
 
   ngOnInit() {
